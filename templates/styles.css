@@ -1,0 +1,28 @@
+body {
+  color: #6d747e;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.5em;
+}
+
+.tall li {
+  height: 125px;
+  margin-top: 50px;
+}
+
+.tall .tab-content {
+  height: calc(100vh - (125px + 4em));
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.tab-content {
+  margin: 0.7em 0;
+}
+.tab-content h2 {
+  color: #80cc28;
+  margin-bottom: 30px;
+}
+.tab-content h3 {
+  color: #434951;
+  font-weight: 600;
+}

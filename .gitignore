@@ -1,3 +1,4 @@
 ENV
 Sentiment_IMDB.ipynb
 .vscode
+__pycache__

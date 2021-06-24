@@ -4,21 +4,15 @@ import pandas as pd
 import re
 import os
 import tensorflow as tf
-from keras.datasets import imdb
-from keras.preprocessing import sequence
-from keras.models import load_model
+from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.models import load_model
+from tensorflow.keras.datasets import imdb
 
 IMAGE_FOLDER = os.path.join('static', 'img')
 
 app = Flask(__name__)
-
 app.config['UPLOAD_FOLDER'] = IMAGE_FOLDER
-
-
-def init():
-    global model, graph
-    model = load_model('./model_IMDB.h5')
-    graph = tf.get_default_graph()
+graph = tf.Graph()
 
 # Code for Sentiment Analysis
 
@@ -29,11 +23,11 @@ def home():
 
 
 @app.route('/predict_sentiment', methods=['POST', "GET"])
-def sent_anly_prediction():
+def predict():
     if request.method == 'POST':
         text = request.form['text']
         Sentiment = ''
-        max_review_length = 500
+        max_review_length = 2000
         word_to_id = imdb.get_word_index()
         strip_special_chars = re.compile("[^A-Za-z0-9 ]+")
         text = text.lower().replace("<br />", " ")
@@ -45,9 +39,12 @@ def sent_anly_prediction():
         # Should be same which you used for training data
         x_test = sequence.pad_sequences(x_test, maxlen=500)
         vector = np.array([x_test.flatten()])
+
         with graph.as_default():
+            model = load_model('./model_IMDB.h5')
             probability = model.predict(np.array([vector][0]))[0][0]
             class1 = model.predict_classes(np.array([vector][0]))[0][0]
+
         if class1 == 0:
             sentiment = 'Negative'
             img_filename = os.path.join(
@@ -61,5 +58,4 @@ def sent_anly_prediction():
 
 
 if __name__ == "__main__":
-    init()
-    app.run()
+    app.run(debug=True)
